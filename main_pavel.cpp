@@ -30,8 +30,10 @@ int main() {
 
 	double (*ic) (const double, const double) = &Ic;
 
-	GHQC ghqc(PsitoW, PsitoR, Pfun, ic, xrange, rrange, trange, brange, Snum, Rnum, Tnum, Bnum, Bnum_dy, xS, wS, xR, wR, orderS, orderR, Dynamic);
+	GHQC ghqc(PsitoW, PsitoR, Pfun, ic, xrange, rrange, trange, brange, Snum, Rnum, Tnum, Bnum, Bnum_dy, xS, wS, xR, wR, orderS, orderR, Static);
 	
+	ghqc.start();
+
 	long maxiter = 10;
 	double tol = 1e-2;
 
@@ -43,12 +45,33 @@ int main() {
 
 	std::cout << fairfee;
 
-	// ghqc.start();
-
 	// std::vector<double> sarr = ghqc.getSARR();
 	// std::vector<double> rarr = ghqc.getRARR();
 	// std::vector<double> barr = ghqc.getBARR();
 	// std::vector<double> final = ghqc.getres();
+
+	// long sIndex, rIndex;
+	// double rWeight;
+
+	// for (long ss = 0; ss < (Snum + 1); ss++) {
+	// 	if (sarr[ss] <= 1.0 + 1e-10) {
+	// 		sIndex = ss;
+	// 	} else {
+	// 		break;
+	// 	}
+	// }
+
+	// for (long rr = 0; rr < (Rnum + 1); rr++) {
+	// 	if (rarr[rr] <= 0.05 + 1e-10) {
+	// 		rIndex = rr;
+	// 	} else {
+	// 		break;
+	// 	}
+	// }
+
+	// std::ofstream output_file("./test.txt");
+
+	// output_file << final[Bnum * (Rnum + 1) * (Snum + 1) + rIndex * (Snum + 1) + sIndex] << " ";
 
 	// std::ofstream output_file("./test.txt");
 
