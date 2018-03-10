@@ -11,7 +11,7 @@ GHQC::GHQC(double (*psiW) (const double, const double, const double, const doubl
 	double (*IC) (const double, const double),
 	Trange xxrange, Trange rrrange, Trange ttrange, Trange bbrange,
 	unsigned long ssnum, unsigned long rrnum, unsigned long ttnum, unsigned long bbnum, unsigned long bbnum_dy,
-	double xS[], double wS[], double xR[], double wR[], unsigned long samples, unsigned long sampler, polType ptype) {
+	alglib::real_1d_array xS, alglib::real_1d_array wS, alglib::real_1d_array xR, alglib::real_1d_array wR, unsigned long samples, unsigned long sampler, polType ptype) {
 	
 	psiTow = psiW;
 	psiTor = psiR;
@@ -289,18 +289,23 @@ void GHQC::static_opti() {
 	for (long bb = 1; bb < (bnum + 1); bb++) {
 		for (long i = 0; i < (rnum + 1); i++) {
 			std::vector<double> bestvalue((snum + 1), 0);
+			std::vector<double> xx(snum + 1);
 			long bbsub = bb - 1;
 			double withdrawn = G;
-			tk::spline sp;
-			std::vector<double> sp_x = SARR;
-			std::vector<double> sp_y(snum + 1);
+
+			alglib::real_1d_array sp_x, sp_y;
+			alglib::spline1dinterpolant sp;
+
+			sp_x.setlength(snum + 1);
+			sp_y.setlength(snum + 1);
 			for (long k = 0; k < (snum + 1); k++) {
-				sp_x[k] = (sp_x[k] > withdrawn)? (sp_x[k] - withdrawn): SARR[0]; 
+				sp_x[k] = SARR[k];
+				xx[k] = (sp_x[k] > withdrawn)? (sp_x[k] - withdrawn): SARR[0]; 
 				sp_y[k] = opttemp[bbsub * (rnum + 1) * (snum + 1) + i * (snum + 1) + k];
 			}
-			sp.set_points(SARR, sp_y);
+			spline1dbuildcubic(sp_x, sp_y, sp);
 			for (long k = 0; k < (snum + 1); k++) {
-				double valuenow = sp(sp_x[k]) + withdrawn - withdrawalPen * ((withdrawn > G)? (withdrawn - G): 0);
+				double valuenow = spline1dcalc(sp, xx[k]) + withdrawn - withdrawalPen * ((withdrawn > G)? (withdrawn - G): 0);
 				bestvalue[k] = (bestvalue[k] > valuenow)? bestvalue[k]: valuenow;
 			}
 
@@ -316,18 +321,24 @@ void GHQC::dy_opti() {
 	for (long bb = 1; bb < (bnum + 1); bb++) {
 		for (long i = 0; i < (rnum + 1); i++) {
 			std::vector<double> bestvalue((snum + 1), 0);
+			std::vector<double> xx(snum + 1);
 			for (long bbsub = 0; bbsub < (bb + 1); bbsub++) {
 				double withdrawn = BARR[bb] - BARR[bbsub];
-				tk::spline sp;
-				std::vector<double> sp_x = SARR;
-				std::vector<double> sp_y(snum + 1);
+
+				alglib::real_1d_array sp_x, sp_y;
+				alglib::spline1dinterpolant sp;
+
+				sp_x.setlength(snum + 1);
+				sp_y.setlength(snum + 1);
+
 				for (long k = 0; k < (snum + 1); k++) {
-					sp_x[k] = (sp_x[k] > withdrawn)? (sp_x[k] - withdrawn): SARR[0]; 
+					sp_x[k] = SARR[k];
+					xx[k] = (sp_x[k] > withdrawn)? (sp_x[k] - withdrawn): SARR[0]; 
 					sp_y[k] = opttemp[bbsub * (rnum + 1) * (snum + 1) + i * (snum + 1) + k];
 				}
-				sp.set_points(SARR, sp_y);
+				spline1dbuildcubic(sp_x, sp_y, sp);
 				for (long k = 0; k < (snum + 1); k++) {
-					double valuenow = sp(sp_x[k]) + withdrawn - withdrawalPen * ((withdrawn > G)? (withdrawn - G): 0);
+					double valuenow = spline1dcalc(sp, xx[k]) + withdrawn - withdrawalPen * ((withdrawn > G)? (withdrawn - G): 0);
 					bestvalue[k] = (bestvalue[k] > valuenow)? bestvalue[k]: valuenow;
 				}
 			}

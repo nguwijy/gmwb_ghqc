@@ -1,7 +1,7 @@
 #include "stdc++.h"
-#include "spline.hpp"		//from http://kluge.in-chemnitz.de/opensource/spline/
+// #include "spline.hpp"		//from http://kluge.in-chemnitz.de/opensource/spline/
 #include "alglib/interpolation.cpp"
-#include "hermite.cpp"
+// #include "hermite.cpp"
 #include "characteristics_pavel.hpp"
 #include "coefunc_pavel.hpp"
 #include "range.cpp"
@@ -9,12 +9,15 @@
 #include "findfair_pavel.cpp"
 
 int main() {
-	wS = new double[orderS];
-	xS = new double[orderS];
-	wR = new double[orderR];
-	xR = new double[orderR];
-	cgqf(orderS, kind, alpha, Beta, a, b, xS, wS);
-	cgqf(orderR, kind, alpha, Beta, a, b, xR, wR);
+	// wS = new double[orderS];
+	// xS = new double[orderS];
+	// wR = new double[orderR];
+	// xR = new double[orderR];
+	// cgqf(orderS, kind, alpha, Beta, a, b, xS, wS);
+	// cgqf(orderR, kind, alpha, Beta, a, b, xR, wR);
+
+	alglib::gqgenerategausshermite(orderS, info, xS, wS);
+	alglib::gqgenerategausshermite(orderR, info, xR, wR);
 
 	Trange xrange(Xfrom, Xto);
 	Trange rrange(Rfrom, Rto);
@@ -27,7 +30,7 @@ int main() {
 
 	double (*ic) (const double, const double) = &Ic;
 
-	GHQC ghqc(PsitoW, PsitoR, Pfun, ic, xrange, rrange, trange, brange, Snum, Rnum, Tnum, Bnum, Bnum_dy, xS, wS, xR, wR, orderS, orderR, Static);
+	GHQC ghqc(PsitoW, PsitoR, Pfun, ic, xrange, rrange, trange, brange, Snum, Rnum, Tnum, Bnum, Bnum_dy, xS, wS, xR, wR, orderS, orderR, Dynamic);
 	
 	long maxiter = 10;
 	double tol = 1e-2;
@@ -40,24 +43,24 @@ int main() {
 
 	std::cout << fairfee;
 
-	ghqc.start();
+	// ghqc.start();
 
-	std::vector<double> sarr = ghqc.getSARR();
-	std::vector<double> rarr = ghqc.getRARR();
-	std::vector<double> barr = ghqc.getBARR();
-	std::vector<double> final = ghqc.getres();
+	// std::vector<double> sarr = ghqc.getSARR();
+	// std::vector<double> rarr = ghqc.getRARR();
+	// std::vector<double> barr = ghqc.getBARR();
+	// std::vector<double> final = ghqc.getres();
 
-	std::ofstream output_file("./test.txt");
+	// std::ofstream output_file("./test.txt");
 
-	output_file << std::setw(20) << "b: " << std::setw(20) << "r: " << std::setw(20) << "s: " << std::setw(20) << "value: " << "\n";
+	// output_file << std::setw(20) << "b: " << std::setw(20) << "r: " << std::setw(20) << "s: " << std::setw(20) << "value: " << "\n";
 
-	for (long bb = 0; bb< (Bnum + 1); bb++) {
-		for (long i = 0; i < (Rnum + 1); i++) {
-			for (long k = 0; k < (Snum + 1); k++) {
-				output_file << std::setw(20) << barr[bb] << std::setw(20) << rarr[i] << std::setw(20) << sarr[k] << std::setw(20) << final[bb * (Rnum + 1) * (Snum + 1) + i * (Snum + 1) + k] << "\n";
-			}
-		}
-	}
+	// for (long bb = 0; bb< (Bnum + 1); bb++) {
+	// 	for (long i = 0; i < (Rnum + 1); i++) {
+	// 		for (long k = 0; k < (Snum + 1); k++) {
+	// 			output_file << std::setw(20) << barr[bb] << std::setw(20) << rarr[i] << std::setw(20) << sarr[k] << std::setw(20) << final[bb * (Rnum + 1) * (Snum + 1) + i * (Snum + 1) + k] << "\n";
+	// 		}
+	// 	}
+	// }
 
 	return 0;
 }

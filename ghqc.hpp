@@ -56,7 +56,7 @@ private:
 			double (*IC) (const double, const double),
 			Trange xxrange, Trange rrrange, Trange ttrange, Trange bbrange,
 			unsigned long ssnum, unsigned long rrnum, unsigned long ttnum, unsigned long bbnum, unsigned long bbnum_dy,
-			double xS[], double wS[], double xR[], double wR[], unsigned long samples, unsigned long sampler, polType ptype);
+			alglib::real_1d_array xS, alglib::real_1d_array wS, alglib::real_1d_array xR, alglib::real_1d_array wR, unsigned long samples, unsigned long sampler, polType ptype);
 		void start();
 		void reset();
 		bool finished();

@@ -50,16 +50,21 @@ const double Xto = log(Sto / P0);
 const double Bfrom = 0.0;		//guaranteed account domain
 const double Bto = P0;			//guaranteed account domain
 
-double a = 0;
-double alpha = 0;
-double b = 1.0;
-double Beta = 0.0;
-int kind = 6;
-const unsigned long orderS = 5;	//5, 9
-const unsigned long orderR = 3;	//3, 5
-double *wS;
-double *xS;
-double *wR;
-double *xR;
+// double a = 0;
+// double alpha = 0;
+// double b = 1.0;
+// double Beta = 0.0;
+// int kind = 6;
+// const unsigned long orderS = 5;	//5, 9
+// const unsigned long orderR = 3;	//3, 5
+// double *wS;
+// double *xS;
+// double *wR;
+// double *xR;
+
+alglib::ae_int_t orderS = 5;	//5, 9
+alglib::ae_int_t orderR = 3;	//3, 5
+alglib::ae_int_t info = 1;
+alglib::real_1d_array wS, xS, wR, xR;
 
 #endif
