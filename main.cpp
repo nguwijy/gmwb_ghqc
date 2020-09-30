@@ -43,7 +43,7 @@ int main() {
 	FindFairP fairVal(ghqc, starget, rtarget, Bnum, maxiter, tol);
 	fairVal.start();
 
-	std::cout << fairfee;
+    std::cout << "The calculated fair fee is " << fairfee << "\n";
 
 	// std::vector<double> sarr = ghqc.getSARR();
 	// std::vector<double> rarr = ghqc.getRARR();
